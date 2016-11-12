@@ -20,8 +20,12 @@ import java.util.concurrent.TimeUnit;
 public class TokenService {
     private static final Logger logger = LoggerFactory.logger(TokenService.class);
 
-    @Inject
     private RedisTemplate<Long, String> redis;
+
+    @Inject
+    public TokenService(RedisTemplate<Long, String> redis){
+        this.redis = redis;
+    }
 
 /*
     public void setRedis(RedisTemplate redis) {
