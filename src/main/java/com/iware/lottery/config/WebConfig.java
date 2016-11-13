@@ -16,6 +16,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.ComponentScan.Filter;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.FilterType;
+import org.springframework.data.web.config.EnableSpringDataWebSupport;
 import org.springframework.data.web.config.SpringDataWebConfiguration;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
@@ -49,6 +50,8 @@ import java.util.List;
                 )
         }
 )
+
+@EnableSpringDataWebSupport
 public class WebConfig extends SpringDataWebConfiguration {
 
     private static final Logger logger = LoggerFactory.getLogger(WebConfig.class);
@@ -123,6 +126,7 @@ public class WebConfig extends SpringDataWebConfiguration {
      * intercepor
      * @param registry
      */
+    @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(authenticationInterceptor).addPathPatterns(Constants.URI_API + "/**");
     }

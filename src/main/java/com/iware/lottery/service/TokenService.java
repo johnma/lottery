@@ -40,6 +40,7 @@ public class TokenService {
         Token tokenModel = new Token(userId, token);
         //存储到redis并设置过期时间
         redis.boundValueOps(userId).set(token, Constants.TOKEN_EXPIRES_HOUR, TimeUnit.HOURS);
+
         return tokenModel;
     }
 

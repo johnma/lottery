@@ -36,7 +36,8 @@ public class RedisTemplateConfig {
         jcf.setPassword("123");
 
         jcf.setPoolConfig(jedisPoolConfig());
-       // jcf.afterPropertiesSet();
+        jcf.afterPropertiesSet();
+
         return jcf;
     }
 
@@ -46,9 +47,9 @@ public class RedisTemplateConfig {
         template.setConnectionFactory(jedisConnectionFactory());
         template.setKeySerializer(new StringRedisSerializer());
         template.setHashValueSerializer(new GenericToStringSerializer<Long>(Long.class));
-        //template.setValueSerializer( new GenericToStringSerializer< Long >( Long.class ) );
-        template.setValueSerializer( new JdkSerializationRedisSerializer());
-        //template.afterPropertiesSet();
+        template.setValueSerializer( new GenericToStringSerializer< Long >( Long.class ) );
+        template.setKeySerializer( new JdkSerializationRedisSerializer());
+        template.afterPropertiesSet();
         return template;
     }
 }

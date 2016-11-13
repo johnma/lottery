@@ -84,6 +84,7 @@ public class TokenController {
     })
     public ResponseEntity<ResponseMessage> logout(@CurrentUser User user){
         //将用户token从redis中删除
+        tokenService.deleteToken(user.getId());
         return new ResponseEntity<>(ResponseMessage.success("success to logout"), HttpStatus.OK);
     }
 }
