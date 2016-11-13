@@ -62,7 +62,9 @@ public class TokenService {
         if (tokenModel == null) {
             return false;
         }
-        String token = redis.boundValueOps(tokenModel.getUserId()).get();
+
+        Long userId = tokenModel.getUserId();
+        String token = redis.boundValueOps(userId).get();
         if (token == null || !token.equals(tokenModel.getToken())) {
             return false;
         }
