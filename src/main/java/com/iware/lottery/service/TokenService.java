@@ -63,14 +63,14 @@ public class TokenService {
 
         long userId = tokenModel.getUserId();
         String token =(String) redis.boundValueOps(userId+ "").get();
-        //这种写法好奇怪
-        if (token == null || !token.equals(tokenModel.getToken())) {
+
+        if (token == null) {
             return false;
         }
-        //我们习惯这样的写法
-//        if(!tokenModel.getToken().equals(token)){
-//            return false;
-//        }
+
+       if(!tokenModel.getToken().equals(token)){
+            return false;
+        }
             //如果验证成功，说明此用户进行了一次有效操作，延长token的过期时间
         redis.boundValueOps(tokenModel.getUserId() + "").expire(Constants.TOKEN_EXPIRES_HOUR, TimeUnit.HOURS);
         return true;
