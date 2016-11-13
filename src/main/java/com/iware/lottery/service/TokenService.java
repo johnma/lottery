@@ -17,11 +17,11 @@ import java.util.concurrent.TimeUnit;
 @Component
 public class TokenService {
     private static final Logger logger = LoggerFactory.logger(TokenService.class);
-
-    private RedisTemplate<Long, String> redis;
+    //key 跟 value定义对嘛？ redis中是用户id+ token
+    private RedisTemplate<String, Object> redis;
 
     @Inject
-    public TokenService(RedisTemplate<Long, String> redis){
+    public TokenService(RedisTemplate<String, Object> redis){
         this.redis = redis;
     }
 
@@ -37,7 +37,7 @@ public class TokenService {
         String token = UUID.randomUUID().toString().replace("-", "");
         Token tokenModel = new Token(userId, token);
         //存储到redis并设置过期时间
-        redis.boundValueOps(userId).set(token, Constants.TOKEN_EXPIRES_HOUR, TimeUnit.HOURS);
+        redis.boundValueOps(userId+"").set(token, Constants.TOKEN_EXPIRES_HOUR, TimeUnit.HOURS);
 
         return tokenModel;
     }
@@ -55,23 +55,28 @@ public class TokenService {
         String token = param[1];
         return new Token(userId, token);
     }
-
+    //面向接口编程嘛，怎么就直接是个实现类了
     public boolean checkToken(Token tokenModel) {
         if (tokenModel == null) {
             return false;
         }
 
-        Long userId = tokenModel.getUserId();
-        String token = redis.boundValueOps(userId).get();
+        long userId = tokenModel.getUserId();
+        String token =(String) redis.boundValueOps(userId+ "").get();
+        //这种写法好奇怪
         if (token == null || !token.equals(tokenModel.getToken())) {
             return false;
         }
-        //如果验证成功，说明此用户进行了一次有效操作，延长token的过期时间
-        redis.boundValueOps(tokenModel.getUserId()).expire(Constants.TOKEN_EXPIRES_HOUR, TimeUnit.HOURS);
+        //我们习惯这样的写法
+//        if(!tokenModel.getToken().equals(token)){
+//            return false;
+//        }
+            //如果验证成功，说明此用户进行了一次有效操作，延长token的过期时间
+        redis.boundValueOps(tokenModel.getUserId() + "").expire(Constants.TOKEN_EXPIRES_HOUR, TimeUnit.HOURS);
         return true;
     }
 
     public void deleteToken(long userId) {
-        redis.delete(userId);
+        redis.delete(userId + "");
     }
 }

@@ -16,7 +16,7 @@ import redis.clients.jedis.JedisPoolConfig;
 public class RedisTemplateConfig {
 
     @Bean
-     static JedisPoolConfig jedisPoolConfig(){
+     JedisPoolConfig jedisPoolConfig(){
         JedisPoolConfig jpc =  new JedisPoolConfig();
         /*
                 jpc.setMaxIdle();
@@ -28,7 +28,7 @@ public class RedisTemplateConfig {
     }
 
     @Bean
-     static JedisConnectionFactory jedisConnectionFactory() {
+     JedisConnectionFactory jedisConnectionFactory() {
         JedisConnectionFactory jcf = new JedisConnectionFactory();
         //jcf.setHostName("127.0.0.1");
         jcf.setHostName("120.25.223.57");
@@ -42,13 +42,17 @@ public class RedisTemplateConfig {
     }
 
     @Bean
-    public static RedisTemplate< String, Long > redisTemplate() {
-        final RedisTemplate< String, Long > template =  new RedisTemplate< String, Long >();
+    public RedisTemplate<String, Object> redisTemplate() {
+        //一般redis的设置会是这样的
+        //这个地方是不是搞反了呢 是啊，你这里定义的是key为string  值为long，引用哪里。嗯我试试相反了
+        final RedisTemplate<String, Object> template =  new RedisTemplate<String, Object>();
         template.setConnectionFactory(jedisConnectionFactory());
-        //template.setKeySerializer(new StringRedisSerializer());
-        template.setHashValueSerializer(new GenericToStringSerializer<Long>(Long.class));
-        template.setValueSerializer( new GenericToStringSerializer< Long >( Long.class ) );
-        template.setKeySerializer( new JdkSerializationRedisSerializer());
+        template.setKeySerializer(new StringRedisSerializer());
+
+        //template.setHashValueSerializer(new GenericToStringSerializer<Long>(Long.class));
+        //template.setValueSerializer( new GenericToStringSerializer< Long >( Long.class ) );
+        //template.setKeySerializer( new JdkSerializationRedisSerializer());
+
         template.afterPropertiesSet();
         return template;
     }
