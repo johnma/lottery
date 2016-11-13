@@ -5,6 +5,7 @@ import com.iware.lottery.model.Token;
 import org.hibernate.annotations.common.util.impl.LoggerFactory;
 import org.jboss.logging.Logger;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.orm.jpa.vendor.OpenJpaDialect;
 import org.springframework.stereotype.Component;
 
 import javax.inject.Inject;
@@ -37,7 +38,7 @@ public class TokenService {
         String token = UUID.randomUUID().toString().replace("-", "");
         Token tokenModel = new Token(userId, token);
         //存储到redis并设置过期时间
-        redis.boundValueOps(userId+"").set(token, Constants.TOKEN_EXPIRES_HOUR, TimeUnit.HOURS);
+        redis.boundValueOps(userId + "").set(token, Constants.TOKEN_EXPIRES_HOUR, TimeUnit.HOURS);
 
         return tokenModel;
     }
@@ -62,7 +63,7 @@ public class TokenService {
         }
 
         long userId = tokenModel.getUserId();
-        String token =(String) redis.boundValueOps(userId+ "").get();
+        String token =(String) redis.boundValueOps(userId + "").get();
 
         if (token == null) {
             return false;
@@ -72,7 +73,7 @@ public class TokenService {
             return false;
         }
             //如果验证成功，说明此用户进行了一次有效操作，延长token的过期时间
-        redis.boundValueOps(tokenModel.getUserId() + "").expire(Constants.TOKEN_EXPIRES_HOUR, TimeUnit.HOURS);
+        redis.boundValueOps(userId + "").expire(Constants.TOKEN_EXPIRES_HOUR, TimeUnit.HOURS);
         return true;
     }
 

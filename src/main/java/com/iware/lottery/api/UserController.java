@@ -5,6 +5,8 @@ import com.iware.lottery.auth.Authentication;
 import com.iware.lottery.exception.InvalidRequestException;
 import com.iware.lottery.model.*;
 import com.iware.lottery.service.UserService;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -63,6 +65,9 @@ public class UserController {
 
     @Authentication
     @RequestMapping(method = RequestMethod.GET, value = "")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "authentication", value = "authentication", required = true, dataType = "string", paramType = "header"),
+    })
     @ResponseBody
     public ResponseEntity<Page<UserDetails>> getAllUsers(
             @RequestParam(value = "q", required = false) String keyword, //
@@ -77,6 +82,9 @@ public class UserController {
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/{id}")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "authentication", value = "authentication", required = true, dataType = "string", paramType = "header"),
+    })
     @ResponseBody
     public ResponseEntity<UserDetails> getUser(@PathVariable("id") Long id){
         logger.debug("get user's info by id @" + id);
@@ -87,20 +95,11 @@ public class UserController {
 
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
-/*
-    @RequestMapping(method = RequestMethod.GET, value = "/{name}")
-    @ResponseBody
-    public ResponseEntity<UserDetails> getUser(@PathVariable("name") String name){
-        logger.debug("get user's info by name @" + name);
 
-        UserDetails user = userService.findUserByName(name);
-
-        logger.debug("get user @" + user);
-
-        return new ResponseEntity<>(user, HttpStatus.OK);
-    }
-*/
     @RequestMapping(method = RequestMethod.PUT, value = "/{id}")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "authentication", value = "authentication", required = true, dataType = "string", paramType = "header"),
+    })
     @ResponseBody
     public ResponseEntity<ResponseMessage> updateUser(@PathVariable("id") Long id,@RequestBody @Valid UserForm form, BindingResult errResult){
         logger.info("update user's info by id@" + id);
@@ -125,6 +124,9 @@ public class UserController {
     }
 
     @RequestMapping(method = RequestMethod.DELETE,value = "/{id}")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "authentication", value = "authentication", required = true, dataType = "string", paramType = "header"),
+    })
     @ResponseBody
     public ResponseEntity<ResponseMessage> deleteUser(@PathVariable("id") Long id){
         logger.info("delete user by id@" + id);
