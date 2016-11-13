@@ -15,7 +15,7 @@ import redis.clients.jedis.JedisPoolConfig;
 @Configuration
 public class RedisTemplateConfig {
     @Bean
-    JedisPoolConfig jedisPoolConfig(){
+     static JedisPoolConfig jedisPoolConfig(){
         JedisPoolConfig jpc =  new JedisPoolConfig();
         /*
                 jpc.setMaxIdle();
@@ -27,25 +27,27 @@ public class RedisTemplateConfig {
     }
 
     @Bean
-    JedisConnectionFactory jedisConnectionFactory() {
+     static JedisConnectionFactory jedisConnectionFactory() {
         JedisConnectionFactory jcf = new JedisConnectionFactory();
+        //jcf.setHostName("127.0.0.1");
         jcf.setHostName("120.25.223.57");
         jcf.setPort(6379);
         jcf.setPassword("123");
 
         jcf.setPoolConfig(jedisPoolConfig());
-
+       // jcf.afterPropertiesSet();
         return jcf;
     }
 
     @Bean
-    public RedisTemplate< String, Long > redisTemplate() {
+    public static RedisTemplate< String, Long > redisTemplate() {
         final RedisTemplate< String, Long > template =  new RedisTemplate< String, Long >();
-        template.setConnectionFactory( jedisConnectionFactory() );
-        template.setKeySerializer( new StringRedisSerializer() );
-        template.setHashValueSerializer( new GenericToStringSerializer< Long >( Long.class ) );
+        template.setConnectionFactory(jedisConnectionFactory());
+        template.setKeySerializer(new StringRedisSerializer());
+        template.setHashValueSerializer(new GenericToStringSerializer<Long>(Long.class));
         //template.setValueSerializer( new GenericToStringSerializer< Long >( Long.class ) );
         template.setValueSerializer( new JdkSerializationRedisSerializer());
+        //template.afterPropertiesSet();
         return template;
     }
 }

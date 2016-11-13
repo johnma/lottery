@@ -34,7 +34,7 @@ public class TokenService {
         //redis.setKeySerializer(new JdkSerializationRedisSerializer());
     }
 */
-    public Token createToken(long userId) {
+    public Token createToken(Long userId) {
         //使用uuid作为源token
         String token = UUID.randomUUID().toString().replace("-", "");
         Token tokenModel = new Token(userId, token);
