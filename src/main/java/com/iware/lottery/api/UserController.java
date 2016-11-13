@@ -1,6 +1,7 @@
 package com.iware.lottery.api;
 
 import com.iware.lottery.Constants;
+import com.iware.lottery.auth.Authentication;
 import com.iware.lottery.exception.InvalidRequestException;
 import com.iware.lottery.model.*;
 import com.iware.lottery.service.UserService;
@@ -60,7 +61,7 @@ public class UserController {
         return new ResponseEntity<>(ResponseMessage.success("user.created"), headers, HttpStatus.OK);
     }
 
-    //@AuthValidate
+    @Authentication
     @RequestMapping(method = RequestMethod.GET, value = "")
     @ResponseBody
     public ResponseEntity<Page<UserDetails>> getAllUsers(
