@@ -14,6 +14,7 @@ import redis.clients.jedis.JedisPoolConfig;
  */
 @Configuration
 public class RedisTemplateConfig {
+
     @Bean
      static JedisPoolConfig jedisPoolConfig(){
         JedisPoolConfig jpc =  new JedisPoolConfig();
